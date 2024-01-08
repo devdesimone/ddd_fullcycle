@@ -1,38 +1,35 @@
-import Customer from "../../../domain/customer/entity/customer";
-import Address from "../../../domain/customer/value-object/address";
 import ListProductUsecase from "./list.product.usecase";
-import CustomerFactory from "../../../domain/customer/factory/customer.factory";
+import ProductFactory from "../../../domain/product/factory/product.factory";
 
-const customer1 = CustomerFactory.createWithAddress("John Dow", new Address( "Street 1", 1, "Zipcode 1", "City 1"));
-const customer2 = CustomerFactory.createWithAddress("Jane Dow", new Address( "Street 2", 2, "Zipcode 2", "City 2"));
+const product1 = ProductFactory.createProduct("Product 1", 100);
+const product2 = ProductFactory.createProduct("Product 2", 200);
 
 
 const MockRepository = () => {
     return {
         find: jest.fn(),
-        findAll: jest.fn().mockReturnValue(Promise.resolve([customer1, customer2])),
+        findAll: jest.fn().mockReturnValue(Promise.resolve([product1, product2])),
         create: jest.fn(),
         update: jest.fn(),
     }
 }
 
-describe("Test for list customer use case", () => {
+describe("Test for list product use case", () => {
 
-    it("should list a customer", async () => {
+    it("should list a product", async () => {
 
         const customerRepository = MockRepository();
         const usecase = new ListProductUsecase(customerRepository);
 
         const output = await usecase.execute();
 
-        expect(output.customers.length).toBe(2);
-        expect(output.customers[0].id).toBe(customer1.id);
-        expect(output.customers[0].name).toBe(customer1.name);
-        expect(output.customers[0].address.street).toBe(customer1.Address.street);
-        expect(output.customers[1].id).toBe(customer2.id);
-        expect(output.customers[1].name).toBe(customer2.name);
-        expect(output.customers[1].address.street).toBe(customer2.Address.street);
-
+        expect(output.products.length).toBe(2);
+        expect(output.products[0].id).toBe(product1.id);
+        expect(output.products[0].name).toBe(product1.name);
+        expect(output.products[0].price).toBe(product1.price);
+        expect(output.products[1].id).toBe(product2.id);
+        expect(output.products[1].name).toBe(product2.name);
+        expect(output.products[1].price).toBe(product2.price);
 
     });
 })
